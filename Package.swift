@@ -8,14 +8,20 @@ let package = Package(
     products: [
         .library(
             name: "SwiftMinHook",
-            targets: ["MinHook"]),
+            targets: ["SwiftMinHook"]),
     ],
     targets: [
+        .target(
+            name: "SwiftMinHook",
+            dependencies: ["MinHook"]),
         .target(
             name: "MinHook",
             dependencies: []),
         .testTarget(
             name: "MinHookTests",
             dependencies: ["MinHook"]),
+        .testTarget(
+            name: "SwiftMinHookTests",
+            dependencies: ["SwiftMinHook"])
     ]
 )

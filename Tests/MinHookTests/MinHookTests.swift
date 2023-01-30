@@ -1,6 +1,6 @@
 import XCTest
 import WinSDK
-@testable import SwiftMinHook
+@testable import MinHook
 
 final class SwiftMinHookTests: XCTestCase {
     fileprivate static var hookedFunctionCalled = false
