@@ -41,25 +41,6 @@ final class SwiftMinHookTests: XCTestCase {
 
         XCTAssertEqual(MH_DisableHook(dm), MH_OK)
     }
-
-    func testWrapped() {
-        let dm = getProcAddress(moduleName: "USER32", procName: "DestroyMenu")
-        XCTAssertNotNil(dm)
-        do {
-            originDestroyMenu = try MH.hook(DestroyMenuFunction.self, at: dm!, with: _hookedDestroyMenu)
-
-            XCTAssertEqual(MH_EnableHook(dm), MH_OK)
-
-            let hmenu = CreateMenu()
-            DestroyMenu(hmenu)
-
-            XCTAssertTrue(SwiftMinHookTests.hookedFunctionCalled)
-
-            XCTAssertEqual(MH_DisableHook(dm), MH_OK)
-        } catch {
-            XCTAssert(false, "Show not throw")
-        }
-    }
 }
 
 typealias DestroyMenuFunction = (@convention(c) (HMENU?) -> Bool)
@@ -91,37 +72,4 @@ func getProcAddress(moduleName: String, procName: LPCSTR) -> UnsafeMutableRawPoi
     guard let module = moduleName.withWideChars({ GetModuleHandleW($0) }) else { return nil }
     guard let address = GetProcAddress(module, procName) else { return nil }
     return unsafeBitCast(address, to: UnsafeMutableRawPointer.self)
-}
-
-enum MH {
-    struct APIError: Error {
-        var code: MH_STATUS
-    }
-
-    struct Generic: Error { }
-
-    static func hook<CFunction>(_ functionType: CFunction.Type, at functionAddress: UnsafeRawPointer, with substitute: CFunction) throws -> CFunction {
-        let sp = unsafeBitCast(substitute, to: UnsafeMutableRawPointer.self)
-        var origin: UnsafeMutableRawPointer?
-        let status = MH_CreateHook(UnsafeMutableRawPointer(mutating: functionAddress), sp, &origin)
-
-        guard status == MH_OK else { throw APIError(code: status) }
-        guard let origin else { throw Generic() }
-
-        return unsafeBitCast(origin, to: CFunction.self)
-    }
-}
-
-final class Hook {
-    init<CFunction>(_ functionType: CFunction.Type, at functionAddress: UnsafeRawPointer, with substitute: CFunction) throws {
-        fatalError()
-    }
-
-    func enable() { }
-
-    func disable() { }
-
-    static func batch(enable: [Hook], disable: [Hook]) {
-
-    }
 }
