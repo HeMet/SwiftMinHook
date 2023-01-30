@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        ".git": true,
+        ".build": true,
+        ".*.sw?": true,
+        "**/.DS_Store": true
+    },
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "files.trimTrailingWhitespace": true
+}

@@ -1,0 +1,6 @@
+module SwiftMinHook {
+	use WinSDK
+	
+	header "MinHook.h"
+	export *
+}
