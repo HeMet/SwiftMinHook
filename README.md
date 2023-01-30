@@ -1,3 +1,3 @@
 # swift-minhook
 
-A description of this package.
+This is thin wrapper around [**MinHook**](https://github.com/TsudaKageyu/minhook) library.
