@@ -72,6 +72,7 @@ extension Hook where CFunction == Void {
 private func withCheckedAPICall(_ body: () -> MH_STATUS) throws {
     let status = body()
     if status != MH_OK {
-        throw MinHookError(code: .init(rawValue: status.rawValue)!, description: "")
+        let cString = MH_StatusToString(status)!
+        throw MinHookError(code: .init(rawValue: status.rawValue)!, description: String(cString: cString))
     }
 }
