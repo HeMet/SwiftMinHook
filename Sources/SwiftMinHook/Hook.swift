@@ -5,12 +5,12 @@ public final class Hook<CFunction> {
 
     public let trampoline: CFunction
 
-    convenience init(target: CFunction, detour: CFunction) throws {
+    public convenience init(target: CFunction, detour: CFunction) throws {
         var targetCopy = target
         try self.init(targetAddress: &targetCopy, detour: detour)
     }
 
-    init(targetAddress: UnsafeRawPointer, detour: CFunction) throws {
+    public init(targetAddress: UnsafeRawPointer, detour: CFunction) throws {
         let target = UnsafeMutableRawPointer(mutating: targetAddress)
         let detour = unsafeBitCast(detour, to: UnsafeMutableRawPointer.self)
 
@@ -31,11 +31,11 @@ public final class Hook<CFunction> {
         }
     }
 
-    func enable() throws {
+    public func enable() throws {
         try withCheckedAPICall { MH_EnableHook(target) }
     }
 
-    func disable() throws {
+    public func disable() throws {
         try withCheckedAPICall { MH_DisableHook(target) }
     }
 
