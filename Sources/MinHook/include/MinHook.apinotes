@@ -1,0 +1,8 @@
+---
+Name: MinHook
+SwiftInferImportAsMember: true
+
+Functions:
+- Name: MH_StatusToString
+  SwiftPrivate: true
+  NullabilityOfRet: N

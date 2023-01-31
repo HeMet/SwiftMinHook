@@ -16,7 +16,9 @@ let package = Package(
             dependencies: ["MinHook"]),
         .target(
             name: "MinHook",
-            dependencies: []),
+            dependencies: []
+            // cSettings: [.unsafeFlags(["-fapinotes-modules"])]
+            ),
         .testTarget(
             name: "MinHookTests",
             dependencies: ["MinHook"]),
