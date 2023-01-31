@@ -39,11 +39,11 @@ public final class Hook<CFunction> {
         try withCheckedAPICall { MH_DisableHook(target) }
     }
 
-    private func queueEnable() throws {
+    public func queueEnable() throws {
         try withCheckedAPICall { MH_QueueEnableHook(target) }
     }
 
-    private func queueDisable() throws {
+    public func queueDisable() throws {
         try withCheckedAPICall { MH_QueueDisableHook(target) }
     }
 }
@@ -53,10 +53,8 @@ extension Hook where CFunction == Void {
         try withCheckedAPICall { value ? MH_Initialize() : MH_Uninitialize() }
     }
 
-    public static func batch(enable: [Hook], disable: [Hook]) throws {
-        try enable.forEach { try $0.queueEnable() }
-        try disable.forEach { try $0.queueDisable() }
-
+    public static func updateAll(_ body: () throws -> Void) throws {
+        try body()
         try withCheckedAPICall { MH_ApplyQueued() }
     }
 
