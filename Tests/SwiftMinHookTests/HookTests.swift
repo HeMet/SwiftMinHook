@@ -14,10 +14,8 @@ final class HookTests: XCTestCase {
     }
 
     func testHook() {
-        let dm = getProcAddress(moduleName: "USER32", procName: "DestroyMenu")
-        XCTAssertNotNil(dm)
         do {
-            let hook = try Hook(targetAddress: dm!, detour: _hookedDestroyMenu)
+            let hook = try Hook(moduleName: "USER32", functionName: "DestroyMenu", detour: _hookedDestroyMenu)
             originDestroyMenu = hook.trampoline
 
             XCTAssertNoThrow(try hook.enable())

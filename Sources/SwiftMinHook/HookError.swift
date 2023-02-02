@@ -31,4 +31,6 @@ public struct MinHookError: Swift.Error {
 
 public enum Error: Swift.Error {
     case noTrampoline
+    case moduleNotFound
+    case functionNotFound
 }

@@ -10,6 +10,13 @@ public final class Hook<CFunction> {
         try self.init(targetAddress: &targetCopy, detour: detour)
     }
 
+    public convenience init(moduleName: String, functionName: String, detour: CFunction) throws {
+        guard let module = moduleName.withWideChars({ GetModuleHandleW($0) }) else { throw Error.moduleNotFound }
+        guard let address = GetProcAddress(module, functionName) else { throw Error.functionNotFound }
+        let targetPtr = unsafeBitCast(address, to: UnsafeMutableRawPointer.self)
+        try self.init(targetAddress: targetPtr, detour: detour)
+    }
+
     public init(targetAddress: UnsafeRawPointer, detour: CFunction) throws {
         let target = UnsafeMutableRawPointer(mutating: targetAddress)
         let detour = unsafeBitCast(detour, to: UnsafeMutableRawPointer.self)
@@ -73,4 +80,11 @@ private func withCheckedAPICall(_ body: () -> MH_STATUS) throws {
         let cString = MH_StatusToString(status)!
         throw MinHookError(code: .init(rawValue: status.rawValue)!, description: String(cString: cString))
     }
+}
+
+private extension String {
+  func withWideChars<Result>(_ body: (UnsafePointer<wchar_t>) throws -> Result) rethrows -> Result {
+      let u32 = self.unicodeScalars.map { wchar_t(bitPattern: Int16($0.value)) } + [0]
+      return try u32.withUnsafeBufferPointer { try body($0.baseAddress!) }
+  }
 }
